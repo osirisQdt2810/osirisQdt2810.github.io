@@ -1,0 +1,32 @@
+name: Proselint
+
+# Trigger on pull requests touching any .md file
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+
+jobs:
+  lint:
+    name: Run proselint on Markdown
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the PR’s code
+      - uses: actions/checkout@v3
+
+      # 2. Set up Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # 3. Install proselint
+      - name: Install proselint
+        run: pip install proselint
+
+      # 4. Run proselint on every .md file
+      - name: Lint Markdown files
+        run: |
+          # find all .md files and lint them
+          find . -type f -name '*.md' -print0 \
+            | xargs -0 proselint
